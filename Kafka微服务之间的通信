@@ -1,0 +1,11 @@
+Kafka 学习笔记
+=
+1、Zookeeper
+
+2、在.yml配置文件中写消息订阅的时候，要写在：
+```
+cloud:
+    stream:
+        binding:
+         <各种Topic>
+```

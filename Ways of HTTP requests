@@ -1,0 +1,55 @@
+几种HTTP请求的区别
+=
+ GET vs POST
+ -
+
+参考：
+
+`https://juejin.im/entry/57597bd45bbb500053c88b4c`
+
+####1、 GET参数放在url中，POST参数放在body里
+不一定，规定上是这样。但GET的body里也可以写参数，POST的url里也可以放参数。不同服务器的处理方法不同，对GET的body中的参数来说，有的服务器会处理，有的则直接忽略。
+####2、 HTTP可以基于UDP也可以基于TCP实现，但是一般使用TCP。
+HTTP协议无状态，而UDP也是不可靠的传输协议，两者组合的性能不会太好，因此使用TCP协议。
+
+GET只进行一个TCP请求，POST进行两次，先把url传过去，再把body传过去。
+####3、其他区别：
+
+- GET在浏览器回退时是无害的，而POST会再次提交请求。
+
+- GET产生的URL地址可以被Bookmark，而POST不可以。
+
+- GET请求会被浏览器主动cache，而POST不会，除非手动设置。
+
+- GET请求只能进行url编码，而POST支持多种编码方式。
+
+- GET请求参数会被完整保留在浏览器历史记录里，而POST中的参数不会被保留。
+
+- GET请求在URL中传送的参数是有长度限制的，而POST么有。
+
+- 对参数的数据类型，GET只接受ASCII字符，而POST没有限制。
+
+- GET比POST更不安全，因为参数直接暴露在URL上，所以不能用来传递敏感信息。
+
+PUT vs PATCH vs POST
+-
+参考：
+
+https://www.web-tinker.com/article/20707.html
+
+####1、PUT方法和PATCH方法所请求的目标地址都是直接指向资源的，而POST方法请求的目标是一个行为处理器
+
+####2、幂等性
+
+PUT是幂等的，而POST和PATCH都是非幂等的。POST是向服务器添加信息，每次POST之后，服务器的状态都将改变，因此是非幂等的。
+
+PATCH是为了弥补PUT和POST的不足而提出的方法，与PUT类似，都是用于更新服务器上已有的数据，不同之处在于，PUT只是简单地把服务器上相应部分的数据替换成新的，而PATCH是可以进行某些程序式的操作的，譬如说请求一次就将某个数据的值加1，需要解析后执行，因此每次请求之后，服务器的状态都不同。
+
+当资源不存在时，PATCH会新建一个，而PUT只对已有信息进行更新。
+
+其他的HTTP请求方式简介可以参考：
+
+https://itbilu.com/other/relate/EkwKysXIl.html
+
+因为目前没有用到故暂且不做整理。
+

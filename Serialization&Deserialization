@@ -1,0 +1,14 @@
+序列化&反序列化
+=
+参考：
+
+http://www.studytonight.com/java/serialization-and-deserialization.php
+
+- 序列化用于将Java对象变成流式比特数据，存到数据库、文件或输出流里，反序列化则是这个过程的逆过程
+
+![](pictures/1501470241.jpg)
+
+- 需要序列化的对象所属的类应当实现Serializable接口，或者使用@Serializable注解。（选择哪一种）
+- 被定义为static或transient的属性不会被序列化
+- Marker Interface，Serializable属于这种接口，没有任何field和method，继承实现它的目的只是在实现这个类时赋予其特殊的行为
+

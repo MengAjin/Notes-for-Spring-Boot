@@ -1,0 +1,28 @@
+常用Git命令（控制台）
+-
+更多命令可以参考：
+http://www.cnblogs.com/springbarley/archive/2012/11/03/2752984.html
+
+注意：以下命令均需要在目标工程的文件夹下执行
+- `git add .` 将所有修改过的文件添加到要上传的列表中
+- `git commit -m "(descriptions)"` 将文件上传至本地，并添加相关说明
+- `git push` 将文件推送至云端默认地址
+- `git push -u origin master` 推送到远端地址
+- `git pull` 从默认的云端地址拉取项目更新的内容
+- `git remote add origin "地址"` 从远端添加文件
+
+
+
+.gitignore文件的作用：该文件中写入的是文件的后缀名，一行一个，git在push文件时将会忽略有这些后缀名的文件。
+如
+```
+.idea
+.iml
+```
+若使用MAC电脑推送文件，还应在文件头添加一行：
+```
+.DS_Store
+```
+更多可见：
+
+https://git-scm.com/docs/gitignore

@@ -1,0 +1,12 @@
+Docker常用命令：
+-
+`docker rm [...]`
+
+`docker rmi [镜像id]`
+
+`docker ps -a` 查看docker容器中当前运行的进程有哪些（-a = "all"）
+
+`docker stop [镜像id]` 停止容器中某个镜像
+ 
+`docker-compose up -d --no-recreate` 启动docker中的所有镜像，--norecreate 表示已经启动的镜像将不重复启动
+ 

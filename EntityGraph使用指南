@@ -1,0 +1,62 @@
+EntityGraph
+=
+可以对同一个Entity设置多个EntityGraph，用于在不同情况下取出同一个实体类中的不同属性的数据。
+
+- 建立EntityGraph
+    - 方法一：静态声明
+```
+@NamedEntityGraph(name = "infoGraph",
+    attributes = {
+        @NamedAttributeNode(name = "attribute1",value = "attribute1")
+        @NamedAttributeNode(name = "attributes2",value = "attributes2",//一层级联，对attributes2中的某个属性的提取作LAZY处理
+            subGraph = "attributes2"),
+        subgraphs = @NamedSubgraph(name = "attributes2",
+            attributeNodes = @NamedAttributeNode("anAttributeOfAttributes2")
+    }
+)
+public class OneEntity implements Serializable {
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.AUTO)
+   @Column(name = "id", updatable = false, nullable = false)
+   private Long id = null;
+   @Version
+   @Column(name = "version")
+   private int version = 0;
+
+   @Column
+   private String attribute1;
+
+   @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+   private Set<OrderItem> attributes2 = new HashSet<OrderItem>();
+}
+```
+    方法二 动态创建
+```
+EntityGraph<Order> graph = this.em.createEntityGraph(Order.class);
+graph.addAttributeNodes("items");
+
+Map<String, Object> hints = new HashMap<String, Object>();
+hints.put("javax.persistence.loadgraph", graph);
+
+this.em.find(Order.class, orderId, hints);
+
+```
+其中em是EntityManager的实例，可以通过@Autowired注入要需要的地方
+
+参考：https://www.thoughts-on-java.org/jpa-21-entity-graph-part-2-define/
+
+- loadgraph和fetchgraph的指定
+
+  目前看来没什么用，这两种情况下，属性是加入实体图的EAGER处理其余LAZY处理，还是加入实体图的LAZY处理，默认EAGER处理，不确定，要在具体程序中尝试一下，可能与一对多还是多对一的关系指定有关。
+
+- 使用Json的时候，如果关系本身没有定义成LAZY的只在取的时候LAZY貌似不可行，会报找不到Bean的错误。原因是：Json要序列化所有实体的hierachy，Session关闭了，再去取相应collection的时候找不到，可以使用OpenSessionView试试，不知道有没有用。
+- 针对上述问题的可能解决方法：
+    #####1、对所有数据都EAGER取（不理想）
+    #####2、设置Json使其忽略所有LAZY的collection，不去处理（效果未知）
+    #####3、使用hibernate4，专门针对Json和Hibernate之间的有效合作，可以处理Lazy—loading的问题
+
+    参考：
+
+    https://stackoverflow.com/questions/4377829/lazyinitializationexception-by-using-spring-mvc-with-ajax-json-mappingjackso
+    https://github.com/Lunx222/jackson-datatype-hibernate

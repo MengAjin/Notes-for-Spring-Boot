@@ -1,0 +1,27 @@
+Eureka
+=
+https://github.com/spring-cloud/spring-cloud-netflix
+
+微服务Eureka Server原理：
+http://tietang.wang/2017/03/26/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B9%8BEurekaServer%E5%8E%9F%E7%90%86/
+
+深度剖析服务发现组件Netflix Eureka：
+http://techshow.ctrip.com/archives/1699.html
+
+---
+
+Eureka 架构中有三个角色：
+- eureka server
+- service provider（client）
+- service consumer
+
+provider（client） 每次启动都会在server处注册，注销或失效时被从注册列表中删去。
+
+配合Spring框架使用Eureka架构只需要修改.yml配置文件以及在server与client端加上少量的注解即可使用，网上有一些需要敲代码实现的，里面使用到的一些类在IDE中输入时显示已经更新不用了。
+
+值得注意的一点是：
+Eureka server中注册的每一个服务都要定期向服务器发送心跳包保活，到时间没有收到心跳包，server就会判定这个client挂了（这个时间可以自定义）。
+而Eureka 还提供了一种保护机制，即在短时间内有大量客户端丢失连接时，某个服务因为网络问题暂时连不上时，进入保护状态，即server不会马上把服务驱逐出去，而是会保存一段时间，过一段时间才自动退出这个状态。
+这个机制默认启动。
+当发现服务关闭却还在server上的列表中时，可以尝试关闭这个机制。
+
