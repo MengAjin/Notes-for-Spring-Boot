@@ -1,0 +1,50 @@
+2017.8.3
+=
+Recent Tasks
+-
+- order-service
+1. 订单查询方法：接口不变，内部调用operation-service
+2. ParkingOrder中的payType改为isMonthBill（_**done**_）
+3. PayType常量中的几种支付状态修改，去掉月票
+3. driveOut中对订单增加缴费记录
+3. 增加针对app的驶出接口
+    - 新建一个controller，映射目录为"/app-orders"
+    - 增加appDriveOut接口，供app端自主缴费时调用
+        - 订单状态改为“待确认”
+        - 往订单中添加一条缴费记录
+        - 填写费用
+4. 把项目拉下来重新编译
+5. 接口测试文档改写，通知接口改动。
+6. 把所有的builder改成构造函数(取消更改，因为使用builder的目的是使用OpenSessionView，使级联取数据时不会因为会话关闭而取不到数据)
+7. 修改event中设置的名字
+8. event里添加字段（是否发票）
+9. 把driveOutProcess里面的方法抽取出来，符合单一职能
+10. controller中的driveOut重构if-else
+11. order和monthBill中添加“是否已开具发票”字段
+12. “待确认驶出”与“停车状态下驶出”有部分代码可以复用，提取出来成为一个private方法
+13. 删除customerUser操作接口的权限，只需要登录即可
+
+
+- operation-service
+1. 记录签到签退消息（同一个人的签到与签退分开在两条记录中）
+2. 月票（原来在customer中，接口位置发生变化）与订单信息移入
+3. customerUser信息同步到customer
+
+业务梳理
+- 
+1. 驶出：
+app缴费 -> 缴费记录生成；订单待确认 -> 收费员确认驶出 -> 订单完成
+2. CustomerUser & Customer & MonthBill & Vehicle & ParkingOrder
+    1. 只停车（无月票无注册）：生成一个Vehicle
+    2. 办月票停车：生成一个Vehicle，其中绑定月票
+    3. 注册成为CustomerUser：新建一个Customer（为空，不包含车辆和月票信息，id为CustomerUser的id）
+    4. customerUser绑定Vehicle：通过特殊识别编码认证，认证后可以查看该车辆相关信息，包括订单与月票
+    5. vehicle绑定ParkingOrder与MonthBill
+
+
+Todo List：
+-
+1. 欠费查询（ES）
+2. outEmployee的一天总营业额查询
+
+
